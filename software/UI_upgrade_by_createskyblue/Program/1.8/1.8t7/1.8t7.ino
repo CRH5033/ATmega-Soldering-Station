@@ -253,7 +253,7 @@ PID ctrl(&Input, &Output, &Setpoint, aggKp, aggKi, aggKd, REVERSE);
     1 - 英文 ENGLISH
     2 - 日语 x (此版本不支持)
 */
-byte LANG = 1;
+byte LANG = 0;
 
 
 

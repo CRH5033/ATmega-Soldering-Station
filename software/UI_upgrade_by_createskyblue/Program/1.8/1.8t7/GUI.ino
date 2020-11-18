@@ -736,7 +736,7 @@ int InputBigNum(int InputPW, byte appID) {
 }
 void QRcodeScreen() {
   arduboy.clear();
-  arduboy.drawSlowXYBitmap(40, 0, QRCode, 48, 48, 1);
+  arduboy.drawSlowXYBitmap(32, 0, QRCode, 64, 64, 1);
   arduboy.display();
   delay(100);
   do {
