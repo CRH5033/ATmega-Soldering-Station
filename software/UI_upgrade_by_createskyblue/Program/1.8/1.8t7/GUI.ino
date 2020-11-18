@@ -738,7 +738,7 @@ void QRcodeScreen() {
   arduboy.clear();
   arduboy.drawSlowXYBitmap(32, 0, QRCode, 64, 64, 1);
   arduboy.display();
-  delay(100);
+  CheckLastButton();
   do {
   } while (digitalRead(BUTTON_PIN) || lastbutton);
   beep();
