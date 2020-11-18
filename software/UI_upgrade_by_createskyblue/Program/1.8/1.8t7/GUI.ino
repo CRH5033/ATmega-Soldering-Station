@@ -328,22 +328,22 @@ uint8_t MenuScreen(uint8_t selected) {
     SlidingAnimationX += (selected - lastselected) * 56;
     if (SlidingAnimationX != 0) SlidingAnimationX += 0.5 * (-SlidingAnimationX);
     lastselected = selected;
-  //  if (arduboy.nextFrame()) {
-      arduboy.clear();
-      //绘制图标 如果有指定的话
-      for (byte i = 0; i < 5; i++) if (selected - 2 + i >= 0 && selected - 2 + i < Menu_table[MenuLevel]) DrawApp(-72 + i * 56 + SlidingAnimationX, selected - 2 + i + QueryMenuObject());
-      DrawAppText(selected + QueryMenuObject());
-      arduboy.display();
-   // }
+    //  if (arduboy.nextFrame()) {
+    arduboy.clear();
+    //绘制图标 如果有指定的话
+    for (byte i = 0; i < 5; i++) if (selected - 2 + i >= 0 && selected - 2 + i < Menu_table[MenuLevel]) DrawApp(-72 + i * 56 + SlidingAnimationX, selected - 2 + i + QueryMenuObject());
+    DrawAppText(selected + QueryMenuObject());
+    arduboy.display();
+    // }
     CheckLastButton();
     //beep(0);
   } while (digitalRead(BUTTON_PIN) || lastbutton);
 
   beep();
   /*
-  arduboy.invert(1);
-  delay(50);
-  arduboy.invert(0);
+    arduboy.invert(1);
+    delay(50);
+    arduboy.invert(0);
   */
   return selected;
 }
@@ -738,8 +738,9 @@ void QRcodeScreen() {
   arduboy.clear();
   arduboy.drawSlowXYBitmap(32, 0, QRCode, 64, 64, 1);
   arduboy.display();
-  CheckLastButton();
+  lastbutton = (!digitalRead(BUTTON_PIN));
   do {
+    CheckLastButton();
   } while (digitalRead(BUTTON_PIN) || lastbutton);
   beep();
 }
