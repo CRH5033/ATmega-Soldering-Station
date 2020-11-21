@@ -19,8 +19,8 @@
 // SolderingStation2
 //
 // ATmega328-controlled Soldering Station for Hakko T12 Tips.
-// 此v1.8t7版本功能简介
-// This 1.8t7 version of the code implements:
+// 此v1.8t8版本功能简介
+// This v1.8t8 version of the code implements:
 // - 烙铁头温度实时监测
 // - Temperature measurement of the tip
 // - PID温度控制
@@ -68,7 +68,7 @@
 // - 内嵌看门狗，宕机自动重启
 // - Watchdog timer automatic reset the MCU
 
-// - V1.8t7 New features:
+// - v1.8t8 New features:
 // ------ EEPROM可用性检查机制
 // ------ EEPROM availability check
 
@@ -114,7 +114,7 @@ Arduboy2 arduboy;
 #include <PID_v1.h>
 #include <avr/sleep.h>
 // Firmware version
-#define VERSION       "v1.8t7"
+#define VERSION       "v1.8t8"
 
 // Type of rotary encoder
 #define ROTARY_TYPE   1         // 0: 2 increments/step; 1: 4 increments/step
@@ -253,7 +253,7 @@ PID ctrl(&Input, &Output, &Setpoint, aggKp, aggKi, aggKd, REVERSE);
     1 - 英文 ENGLISH
     2 - 日语 x (此版本不支持)
 */
-byte LANG = 1;
+byte LANG = 0;
 
 
 

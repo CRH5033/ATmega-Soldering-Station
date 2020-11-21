@@ -328,22 +328,22 @@ uint8_t MenuScreen(uint8_t selected) {
     SlidingAnimationX += (selected - lastselected) * 56;
     if (SlidingAnimationX != 0) SlidingAnimationX += 0.5 * (-SlidingAnimationX);
     lastselected = selected;
-  //  if (arduboy.nextFrame()) {
-      arduboy.clear();
-      //绘制图标 如果有指定的话
-      for (byte i = 0; i < 5; i++) if (selected - 2 + i >= 0 && selected - 2 + i < Menu_table[MenuLevel]) DrawApp(-72 + i * 56 + SlidingAnimationX, selected - 2 + i + QueryMenuObject());
-      DrawAppText(selected + QueryMenuObject());
-      arduboy.display();
-   // }
+    //  if (arduboy.nextFrame()) {
+    arduboy.clear();
+    //绘制图标 如果有指定的话
+    for (byte i = 0; i < 5; i++) if (selected - 2 + i >= 0 && selected - 2 + i < Menu_table[MenuLevel]) DrawApp(-72 + i * 56 + SlidingAnimationX, selected - 2 + i + QueryMenuObject());
+    DrawAppText(selected + QueryMenuObject());
+    arduboy.display();
+    // }
     CheckLastButton();
     //beep(0);
   } while (digitalRead(BUTTON_PIN) || lastbutton);
 
   beep();
   /*
-  arduboy.invert(1);
-  delay(50);
-  arduboy.invert(0);
+    arduboy.invert(1);
+    delay(50);
+    arduboy.invert(0);
   */
   return selected;
 }
@@ -357,7 +357,7 @@ void DrawApp(int x, byte appID) {
 //显示APP对应的文本
 void DrawAppText(byte appID) {
   //  arduboy.setCursor(0, 55); arduboy.print(appID);
-  if (LANG == 0) arduboy.drawSlowXYBitmap(48, 48, CN_table[appID], 36, 16, 1); else if (LANG == 2 && LANG_JP_State) {
+  if (LANG == 0) arduboy.drawSlowXYBitmap(50, 50, CN_table[appID], 28, 14, 1); else if (LANG == 2 && LANG_JP_State) {
 #if LANG_JP_State
     drawText(48, 52, JP_table[appID], pgm_read_byte(&(JP_Length_table[appID])));
 #endif
@@ -535,7 +535,7 @@ void ChangeTipScreen() {
   }
   // if (s == "LIGHT.\0")
   ShowPTemp(&PTemp[0]);
-
+  DrawTempCurve();
 
 }
 
@@ -610,6 +610,7 @@ void CalibrationScreen() {
     delay(5000);
     resetFunc();
   }
+  DrawTempCurve();
   arduboy.clear();
   arduboy.setTextSize(2);
   SetTextColor(0);
@@ -632,18 +633,41 @@ void ShowPTemp(float *p) {
     p++;
   }
   arduboy.display();
-
   lastbutton = (!digitalRead(BUTTON_PIN));
   while (digitalRead(BUTTON_PIN) || lastbutton) CheckLastButton();
-  /*
-    lastbutton = (!digitalRead(BUTTON_PIN));
-    setRotary(50, 450, 1, 0);
-    do {
+
+
+}
+//绘制温度曲线
+void DrawTempCurve() {
+  byte x;
+  lastbutton = (!digitalRead(BUTTON_PIN));
+  setRotary(0, 63, 1, 0);
+  do {
     arduboy.clear();
-    for (int y = 0; y < 64; y++) arduboy.drawPixel(map(calculateTemp(map(y, 0, 63, 0, 400)), CalTemp[0], CalTemp[8], 0, 127), y,1);
+    for (int yy = 0; yy < 64; yy += 5)
+      for (int xx = 0; xx < 64; xx += 5) arduboy.drawPixel(xx, yy, 1);
+
+    for (int y = 0; y < 400; y++) {
+      x = map(calculateTemp(map(y, 0, 63, 0, 400)), 0, calculateTemp(400), 0, 64);
+      arduboy.drawPixel(x, 63 - y, 1);
+      if (y == getRotary()) arduboy.fillCircle(x, 63 - y, 3, 1);
+    }
+    SetTextColor(0);
+    arduboy.setCursor(60, 48);
+    arduboy.print(F("ADC"));
+    arduboy.setCursor(60, 56);
+    arduboy.print(F("Temp"));
+    SetTextColor(1);
+    arduboy.setCursor(87, 48);
+    arduboy.println(map(getRotary(), 0, 63, 0, 400));
+    arduboy.setCursor(87, 56);
+    arduboy.println(calculateTemp(map(getRotary(), 0, 63, 0, 400)));
+
+
     arduboy.display();
     CheckLastButton();
-    } while (digitalRead(BUTTON_PIN) || lastbutton);*/
+  } while (digitalRead(BUTTON_PIN) || lastbutton);
 }
 //命名界面 文本输入界面
 // input tip name screen
@@ -736,10 +760,11 @@ int InputBigNum(int InputPW, byte appID) {
 }
 void QRcodeScreen() {
   arduboy.clear();
-  arduboy.drawSlowXYBitmap(40, 0, QRCode, 48, 48, 1);
+  arduboy.drawSlowXYBitmap(32, 0, QRCode, 64, 64, 1);
   arduboy.display();
-  delay(100);
+  lastbutton = (!digitalRead(BUTTON_PIN));
   do {
+    CheckLastButton();
   } while (digitalRead(BUTTON_PIN) || lastbutton);
   beep();
 }
