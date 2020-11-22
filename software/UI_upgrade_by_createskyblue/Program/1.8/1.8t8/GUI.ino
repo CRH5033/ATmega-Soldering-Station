@@ -13,10 +13,11 @@ void MainScreen() {
   else if (IsWorky) SysState = 4;
   else if (Output < 180) SysState = 5;
   else SysState = 6;
+
+  arduboy.clear();
   if (SysState != 1) {
     if (MainScrType) {
       arduboy.invert(1);
-      arduboy.clear();
       //详细信息页
       arduboy.fillRect(0, 0, 128, 64, 1); //白底
       arduboy.setTextSize(1);
@@ -66,7 +67,7 @@ void MainScreen() {
 
 
 
-      arduboy.display();
+      
       //警报声
       if (getChipTemp() > 80 && ((millis() * 4) / 1000) % 2 || (float)Vin / 100 < UnderVoltage && ((millis() * 4) / 1000) % 2) {
         beep();
@@ -75,12 +76,11 @@ void MainScreen() {
 
     } else {
       SetTextColor(1);
-      arduboy.clear();
       if (getChipTemp() > 80 && ((millis() * 4) / 1000) % 2) beep();
       if ((float)Vin / 100 < UnderVoltage && ((millis() * 4) / 1000) % 2) beep();
       DrawNumRect(9, 3, 6, ShowTemp);
       DrawStatusBar(1);
-      arduboy.display();
+      
     }
   }
 
@@ -640,16 +640,17 @@ void ShowPTemp(float *p) {
 }
 //绘制温度曲线
 void DrawTempCurve() {
+  arduboy.setFrameRate(40);
   byte x;
   lastbutton = (!digitalRead(BUTTON_PIN));
   setRotary(0, 63, 1, 0);
   do {
     arduboy.clear();
-    for (int yy = 0; yy < 64; yy += 5)
-      for (int xx = 0; xx < 64; xx += 5) arduboy.drawPixel(xx, yy, 1);
+    if (arduboy.nextFrame()) for (int yy = 0; yy < 64; yy += 8)
+      for (int xx = 0; xx < 128; xx += 8) arduboy.drawPixel(xx+2, yy+4, 1);
 
-    for (int y = 0; y < 400; y++) {
-      x = map(calculateTemp(map(y, 0, 63, 0, 400)), 0, calculateTemp(400), 0, 64);
+    for (int y = 0; y < 64; y++) {
+      x = map(calculateTemp(y*16), 0, calculateTemp(1023), 0, 127);
       arduboy.drawPixel(x, 63 - y, 1);
       if (y == getRotary()) arduboy.fillCircle(x, 63 - y, 3, 1);
     }
@@ -660,14 +661,15 @@ void DrawTempCurve() {
     arduboy.print(F("Temp"));
     SetTextColor(1);
     arduboy.setCursor(87, 48);
-    arduboy.println(map(getRotary(), 0, 63, 0, 400));
+    arduboy.println(getRotary()*16);
     arduboy.setCursor(87, 56);
-    arduboy.println(calculateTemp(map(getRotary(), 0, 63, 0, 400)));
+    arduboy.println(calculateTemp(getRotary()*16));
 
 
     arduboy.display();
     CheckLastButton();
   } while (digitalRead(BUTTON_PIN) || lastbutton);
+  arduboy.setFrameRate(15);
 }
 //命名界面 文本输入界面
 // input tip name screen

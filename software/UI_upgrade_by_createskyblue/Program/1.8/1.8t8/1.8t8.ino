@@ -79,14 +79,14 @@
 // ------ 9 segments of temperature curve fitting
 
 /*
-增加"EEPROM"和"RESET." 指令，可以给标签命名为指令的名字，点击标签即可执行
-关于"EEPROM"指令:查看EEPROM内容
-关于"RESET."指令：重置EEPROM *警告！ 你会失去所有烙铁头的温度校准数据!!!
+  增加"EEPROM"和"RESET." 指令，可以给标签命名为指令的名字，点击标签即可执行
+  关于"EEPROM"指令:查看EEPROM内容
+  关于"RESET."指令：重置EEPROM *警告！ 你会失去所有烙铁头的温度校准数据!!!
 
-Add "EEPROM" and "RESET." to give the label the name of the instruction. Click the label to execute
-Regarding "EEPROM" instruction: View EEPROM contents
-Regarding "RESET." instruction: RESET EEPROM 
-* warning! You will lose all the temperature calibration data for the tip of the soldering iron!!
+  Add "EEPROM" and "RESET." to give the label the name of the instruction. Click the label to execute
+  Regarding "EEPROM" instruction: View EEPROM contents
+  Regarding "RESET." instruction: RESET EEPROM
+  warning! You will lose all the temperature calibration data for the tip of the soldering iron!!
 */
 
 
@@ -240,7 +240,7 @@ byte Line[4];
 bool RotaryD = false;
 
 //开机非线性动画
-byte BootAnimationY = 64;
+byte BootAnimationY = 128;
 
 // Specify the links and initial PID tuning parameters
 PID ctrl(&Input, &Output, &Setpoint, aggKp, aggKi, aggKd, REVERSE);
@@ -337,6 +337,15 @@ void setup() {
   // long beep for setup completion
   beep(); beep();
   ShowVersion();
+  /*
+  for (byte c = 128; c >0; c-=4) {
+    MainScreen();
+    for (byte r = 0; r < 64; r++) {
+      if (r % 2 == 0) arduboy.drawLine(0, r, c, r, 1); else arduboy.drawLine(127-c, r, 127, r, 1);
+    }
+    arduboy.display();
+  }
+*/
 }
 
 void loop() {
@@ -346,5 +355,6 @@ void loop() {
   SENSORCheck(1);      // reads temperature and vibration switch of the iron
   Thermostat(0);       // heater control
   MainScreen();       // updates the main page on the OLED
+  arduboy.display();
   //beep(0);
 }

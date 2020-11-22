@@ -50,7 +50,18 @@ const char EN_39[] PROGMEM = "JP";
 const char EN_40[] PROGMEM = "Lock";
 const char EN_41[] PROGMEM = "Rotary";
 
-const char *const EN_table[] PROGMEM = {EN_0, EN_1, EN_2, EN_3, EN_4, EN_5, EN_41, EN_6, EN_40, EN_7, EN_38, EN_8, EN_9, EN_10, EN_11, EN_12, EN_13, EN_8, EN_15, EN_16, EN_17, EN_18, EN_19, EN_20, EN_21, EN_22, EN_23, EN_24, EN_25, EN_26, EN_27, EN_28, EN_29, EN_30, EN_31, EN_32, EN_39, EN_35, EN_36, EN_37,};
+const char *const EN_table[] PROGMEM = {
+  EN_0, EN_1, EN_2, EN_3, EN_4, EN_5, EN_41, EN_6, EN_40, EN_7, EN_38, EN_8,
+  EN_9, EN_10, EN_11, EN_12, EN_13, EN_8,
+  EN_15, EN_16, EN_17, EN_18,
+  EN_19, EN_20, EN_21, EN_22,
+  EN_23, EN_24,
+  EN_25, EN_26,
+  EN_27, EN_28,
+  EN_29, EN_30,
+  EN_31, EN_32, EN_39,
+  EN_35, EN_36, EN_37,
+};
 
 /*
   #!/usr/bin/python

@@ -2,7 +2,7 @@
   作用：防止因为EEPROM损坏而载入了错误的运行参数导致参数生产安全事故
 */
 void CheckEEPROM() {
-  
+
   byte w, r;
   int pass = 0, fail = 0;
   for (int i = 0; i < EEPROM.length(); i++) {
