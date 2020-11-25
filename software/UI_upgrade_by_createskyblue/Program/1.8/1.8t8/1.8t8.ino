@@ -159,9 +159,11 @@ Arduboy2 arduboy;
 // EEPROM identifier
 #define EEPROM_IDENT   0x140C   // to identify if EEPROM was written by this program
 
-//Beep
+//蜂鸣器 beep
 #define SetBeepCoolTime 200
 unsigned long BeepCoolTime;
+#define CutOffPowerAlarm true
+#define TemperatureArrivalReminder true
 
 // Define the aggressive and conservative PID tuning parameters
 double aggKp = 11, aggKi = 0.5, aggKd = 1;
@@ -189,17 +191,17 @@ char      TipName[TIPNAMELENGTH] = {TIPNAME};
 uint8_t   CurrentTip   = 0;
 uint8_t   NumberOfTips = 1;
 
-// Variables for pin change interrupt
+//中断引脚相关变量
 volatile uint8_t  a0, b0, c0, d0;
 volatile bool     ab0;
 volatile int      Count, CountMin, CountMax, CountStep;
 volatile bool     handleMoved;
 
-// Variables for temperature control
+//温度控制相关变量
 uint16_t  SetTemp, ShowTemp, gap, Step;
 double    Input, Output, Setpoint, RawTemp, CurrentTemp, ChipTemp;
 
-// Variables for voltage readings
+//电压读取相关变量
 uint16_t  Vcc, Vin;
 
 // State variables
@@ -220,9 +222,11 @@ uint8_t   GoneSeconds;
 uint8_t   SensorCounter = 255;
 //串口助手
 //int x, y, a, b;
+
 //欠压报警
 byte UnderVoltage = 0;
-// Control variables
+
+//MOS管控制延迟
 uint16_t  Time2settle = 300;
 
 //模拟数字滚轮 Numerical scrolling effect
@@ -242,10 +246,10 @@ bool RotaryD = false;
 //开机非线性动画
 byte BootAnimationY = 128;
 
-// Specify the links and initial PID tuning parameters
+//初始化PID参数
 PID ctrl(&Input, &Output, &Setpoint, aggKp, aggKi, aggKd, REVERSE);
 
-//NMOS - PMOS软件切换
+//NMOS - PMOS模式切换
 #define UsePMOS false
 
 //LANG 语言支持

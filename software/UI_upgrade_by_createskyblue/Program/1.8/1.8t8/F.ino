@@ -49,7 +49,8 @@ float getChipTemp() {
   }
   bitClear (ADCSRA, ADEN);              // disable ADC
   result >>= 2;                         // devide by 4
-  return ((result - 2594) / 9.76);      // calculate internal temperature in degrees C
+  result = (result - 2594) / 9.76;      // calculate internal temperature in degrees C
+  if (result < 450) return ((result - 2594) / 9.76); else return 0;
 }
 
 // get input voltage in mV by reading 1.1V reference against AVcc
@@ -107,8 +108,8 @@ float calculateTemp(float t) {
   return PTemp[0] + t * PTemp[1] + t * t * PTemp[2] + t * t * t * PTemp[3];
 }
 /*
- * 温度控制
- * mode-> 0:以实际温度数值为基准 1:以ADC数值为基准(非PID模式)
+   温度控制
+   mode-> 0:以实际温度数值为基准 1:以ADC数值为基准(非PID模式)
 */
 void Thermostat(bool mode) {
   // define Setpoint acoording to current working mode
@@ -207,11 +208,13 @@ void SENSORCheck(bool mode) {
     BeepIfWorky = false;
   } else {
     IsWorky = false;
+#if TemperatureArrivalReminder
     BeepIfWorky = true;
+#endif
   }
   // checks if tip is present or currently inserted
   if (ShowTemp > 500) TipIsPresent = false;   // tip removed ?
-  if (!TipIsPresent && (ShowTemp < 500)&&mode) {    // new tip inserted ?
+  if (!TipIsPresent && (ShowTemp < 500) && mode) {  // new tip inserted ?
     //关闭加热
 #if UsePMOS
     analogWrite(CONTROL_PIN, 0);
@@ -227,7 +230,7 @@ void SENSORCheck(bool mode) {
     c0 = LOW;                                 // switch must be released
     setRotary(TEMP_MIN, TEMP_MAX, TEMP_STEP, SetTemp);  // reset rotary encoder
   }
-  
+
 }
 
 

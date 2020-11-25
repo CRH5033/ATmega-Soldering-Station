@@ -67,7 +67,7 @@ void MainScreen() {
 
 
 
-      
+
       //警报声
       if (getChipTemp() > 80 && ((millis() * 4) / 1000) % 2 || (float)Vin / 100 < UnderVoltage && ((millis() * 4) / 1000) % 2) {
         beep();
@@ -80,7 +80,7 @@ void MainScreen() {
       if ((float)Vin / 100 < UnderVoltage && ((millis() * 4) / 1000) % 2) beep();
       DrawNumRect(9, 3, 6, ShowTemp);
       DrawStatusBar(1);
-      
+
     }
   }
 
@@ -404,7 +404,9 @@ void DrawIntensiveComputing() {
   //模拟噪点
   for (int i = 0; i < calculate * 256 + 256; i++)  arduboy.drawPixel(random(0, 128), random(0, 64), 1);
   //声效
+#if CutOffPowerAlarm
   if ((BeepEnable)) analogWrite(BUZZER_PIN, 64 + calculate * 64 + random(-8, 8));
+#endif
   //if ((BeepEnable)) tone(BUZZER_PIN, int(calculate * 300) + 500 + random(-50, 50));  //没必要浪费内存
 
   arduboy.display();
@@ -647,10 +649,10 @@ void DrawTempCurve() {
   do {
     arduboy.clear();
     if (arduboy.nextFrame()) for (int yy = 0; yy < 64; yy += 8)
-      for (int xx = 0; xx < 128; xx += 8) arduboy.drawPixel(xx+2, yy+4, 1);
+        for (int xx = 0; xx < 128; xx += 8) arduboy.drawPixel(xx + 2, yy + 4, 1);
 
     for (int y = 0; y < 64; y++) {
-      x = map(calculateTemp(y*16), 0, calculateTemp(1023), 0, 127);
+      x = map(calculateTemp(y * 16), 0, calculateTemp(1023), 0, 127);
       arduboy.drawPixel(x, 63 - y, 1);
       if (y == getRotary()) arduboy.fillCircle(x, 63 - y, 3, 1);
     }
@@ -661,9 +663,9 @@ void DrawTempCurve() {
     arduboy.print(F("Temp"));
     SetTextColor(1);
     arduboy.setCursor(87, 48);
-    arduboy.println(getRotary()*16);
+    arduboy.println(getRotary() * 16);
     arduboy.setCursor(87, 56);
-    arduboy.println(calculateTemp(getRotary()*16));
+    arduboy.println(calculateTemp(getRotary() * 16));
 
 
     arduboy.display();
