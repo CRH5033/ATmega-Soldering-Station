@@ -50,7 +50,7 @@ float getChipTemp() {
   bitClear (ADCSRA, ADEN);              // disable ADC
   result >>= 2;                         // devide by 4
   result = (result - 2594) / 9.76;      // calculate internal temperature in degrees C
-  if (result < 450) return ((result - 2594) / 9.76); else return 0;
+  if (result < 450) return result; else return 0;
 }
 
 // get input voltage in mV by reading 1.1V reference against AVcc
