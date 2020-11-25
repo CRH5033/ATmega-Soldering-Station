@@ -387,6 +387,7 @@ void DrawPoint(int x, int y, bool color) {
 
 //FP 密集运算屏保
 void DrawIntensiveComputing() {
+  arduboy.invert(0);
   //关闭加热
 #if UsePMOS
   analogWrite(CONTROL_PIN, 0);
